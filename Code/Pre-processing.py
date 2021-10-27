@@ -7,6 +7,9 @@ import os
 from sklearn import svm
 
 from sklearn.model_selection import train_test_split
+from sklearn import preprocessing
+
+
 """
 TODO:
 Add code that removes blank rows/columns from the input image. I will probably then add the same number of rows/columns at the bottom/right side
@@ -148,8 +151,8 @@ def get_samples(sr_no, dict_sample, source):
 def get_train_test (type_data):
 
     # As for now only working for P1 normal condtion 
-    source = 'D:/documents__/7th sem/fyp/firemaker/300dpi/p1-copy-normal/'
-    #source = 'C:/Users/lenovo/Desktop/Educate/FYP/firemaker/300dpi/p1-copy-normal/'
+    #source = 'D:/documents__/7th sem/fyp/firemaker/300dpi/p1-copy-normal/'
+    source = 'C:/Users/lenovo/Desktop/Educate/FYP/firemaker/300dpi/p1-copy-normal/'
     dict_sample = {}
     sr_no = '01'
     dict_sample[sr_no] = {}
@@ -214,11 +217,17 @@ def get_train_test (type_data):
 
 
 
-def Svm_extraction (X_train,Y_train,X_test,Y_test):
+def svm_extraction (X_train,Y_train,X_test,Y_test):
 
 
    
-    model = svm.SVC(C=1,kernel = 'poly',gamma = 'auto')
+    model = svm.SVC(C=1,kernel = 'linear',gamma = 'auto', max_iter=-1)
+    # can change kernel if needed
+    
+    # Scaling to improve speed
+    X_train = preprocessing.scale(X_train)
+    X_test = preprocessing.scale(X_test)
+    
     model.fit(X_train,Y_train)
     # Prediction 
     prediction = model.predict(X_test)
@@ -237,8 +246,8 @@ def Svm_extraction (X_train,Y_train,X_test,Y_test):
 
 X,Y = get_train_test('lowpass')
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8, random_state = 0)
-print (X.shape,Y.shape)
-Svm_extraction(X_train,Y_train,X_test,Y_test)
+#print (X.shape,Y.shape)
+svm_extraction(X_train,Y_train,X_test,Y_test)
 
 """
 print_samples('Lowpass', dict_sample[sr_no]['153']['lowpass'])
